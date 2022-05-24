@@ -14,6 +14,21 @@ void Game::initTextures()
 	this->textures["Bullet"]->loadFromFile("Textures/bullet.png");
 }
 
+void Game::initGUI()
+{
+	// Load font
+	if (!this->font.loadFromFile("Fonts/wence.otf"))
+	{
+		std::cout << "ERROR::GAME::INITGUI::Could not load font." << std::endl;
+	}
+
+	// Init point text
+	this->pointText.setFont(this->font);
+	this->pointText.setCharacterSize(12);
+	this->pointText.setFillColor(sf::Color::White);
+	this->pointText.setString("test");
+}
+
 void Game::initPlayer()
 {
 	this->player = new Player();
@@ -30,6 +45,7 @@ Game::Game()
 {
 	this->initWindow();
 	this->initTextures();
+	this->initGUI();
 	this->initPlayer();
 	this->initAsteroids();
 }
@@ -92,8 +108,13 @@ void Game::updateInput()
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->player->canAttacK())
 	{
-		this->bullets.push_back(new Gun(this->textures["Bullet"], this->player->getPos().x + this->player->getBounds().width / 2.0f, this->player->getPos().y, 0.0f, -5.0f, 5.0f));
+		this->bullets.push_back(new Gun(this->textures["Bullet"], (this->player->getPos().x + this->player->getBounds().width / 2.0f) - 20.0f, this->player->getPos().y, 0.0f, -5.0f, 5.0f));
 	}
+}
+
+void Game::updateGUI()
+{
+
 }
 
 void Game::updateBullets()
@@ -121,7 +142,7 @@ void Game::updateAsteroids()
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->asteroids.push_back(new Asteroid(rand() % this->window->getSize().x - 20.0f, -100.0f));
+		this->asteroids.push_back(new Asteroid(rand() % this->window->getSize().x - 20.0f, -10.0f));
 		this->spawnTimer = 0.0f;
 	}
 		
@@ -130,9 +151,9 @@ void Game::updateAsteroids()
 		bool enemyRemoved = false;
 		this->asteroids[i]->update();
 
-		for (unsigned int k = 0; k < this->bullets.size() && !enemyRemoved ; k++)
+		for (unsigned int k = 0; k < this->bullets.size() && enemyRemoved == false; k++)
 		{
-			if (this->bullets[k]->getBounds().intersects(this->asteroids[i]->getBounds()));
+			if (this->asteroids[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
 				this->bullets.erase(this->bullets.begin() + k);
 				this->asteroids.erase(this->asteroids.begin() + i);
@@ -149,6 +170,7 @@ void Game::updateAsteroids()
 				enemyRemoved = true;
 			}
 		}
+		
 	}
 }
 
@@ -160,6 +182,12 @@ void Game::update()
 	this->player->update();
 	this->updateBullets();
 	this->updateAsteroids();
+	this->updateGUI();
+}
+
+void Game::renderGUI()
+{
+	this->window->draw(this->pointText);
 }
 
 void Game::render()
@@ -178,6 +206,8 @@ void Game::render()
 	{
 		asteroid->render(this->window);
 	}
+
+	this->renderGUI();
 
 	this->window->display();
 }

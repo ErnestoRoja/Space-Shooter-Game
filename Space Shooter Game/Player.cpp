@@ -21,7 +21,7 @@ void Player::initSprite()
 {
 	// Set the texture to the sprite
 	this->sprite.setTexture(this->texture);
-
+	this->sprite.setPosition(900.0f, 900.0f);
 	// Resize the sprite
 	this->sprite.scale(0.2f, 0.2f);
 }
