@@ -16,10 +16,10 @@ public:
 	Gun(sf::Texture* texture, float pos_x, float pos_y, float dir_x, float dir_y, float movement_speed);
 	virtual ~Gun();
 
-	// Accessor
+	// Accessors
 	const sf::FloatRect getBounds() const;
 
-	// Functions
+	// Public functions
 	void update();
 	void render(sf::RenderTarget* target);
 };

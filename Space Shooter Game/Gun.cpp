@@ -23,11 +23,13 @@ Gun::~Gun()
 	
 }
 
+// Accessor
 const sf::FloatRect Gun::getBounds() const
 {
 	return this->bullet.getGlobalBounds();
 }
 
+// Public functions
 void Gun::update()
 {
 	this->bullet.move(this->movementSpeed * this->direction);

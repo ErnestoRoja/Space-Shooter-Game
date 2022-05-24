@@ -1,5 +1,6 @@
 #pragma once
 #include"Player.h"
+#include"Asteroids.h"
 
 #include<map>
 
@@ -16,10 +17,16 @@ private:
 	// Player
 	Player* player;
 
+	// Enemies
+	float spawnTimer;
+	float spawnTimerMax;
+	std::vector<Asteroid*> asteroids;
+
 	// Private functions
 	void initWindow();
 	void initTextures();
 	void initPlayer();
+	void initAsteroids();
 
 public:
 	Game();
@@ -31,6 +38,7 @@ public:
 	void updatePollEvents();
 	void updateInput();
 	void updateBullets();
+	void updateAsteroids();
 	void update();
 	void render();
 };

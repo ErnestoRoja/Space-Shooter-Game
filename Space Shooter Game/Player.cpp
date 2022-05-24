@@ -1,5 +1,6 @@
 #include "Player.h"
 
+// Private functions
 void Player::initVariables()
 {
 	this->movementSpeed = 10.0f;
@@ -14,7 +15,6 @@ void Player::initTexture()
 	{
 		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load ship texture." << std::endl;
 	}
-
 }
 
 void Player::initSprite()
@@ -38,11 +38,18 @@ Player::~Player()
 
 }
 
+// Accessors
 const sf::Vector2f& Player::getPos() const
 {
 	return this->sprite.getPosition();
 }
 
+const sf::FloatRect Player::getBounds() const
+{
+	return this->sprite.getGlobalBounds();
+}
+
+// Public functions
 void Player::move(const float dirX, const float dirY)
 {
 	this->sprite.move(this->movementSpeed * dirX, this->movementSpeed * dirY);

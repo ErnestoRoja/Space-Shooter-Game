@@ -21,10 +21,11 @@ public:
 	Player();
 	virtual ~Player();
 
-	// Accessor
+	// Accessors
 	const sf::Vector2f& getPos() const;
+	const sf::FloatRect getBounds() const;
 
-	// Functions
+	// Public functions
 	void move(const float dirX, const float dirY);
 	const bool canAttacK();
 
