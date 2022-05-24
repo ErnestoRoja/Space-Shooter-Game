@@ -24,9 +24,23 @@ void Game::initGUI()
 
 	// Init point text
 	this->pointText.setFont(this->font);
-	this->pointText.setCharacterSize(12);
+	this->pointText.setCharacterSize(36);
 	this->pointText.setFillColor(sf::Color::White);
 	this->pointText.setString("test");
+}
+
+void Game::initBackground()
+{
+	if (!this->backgroundTexture.loadFromFile("Textures/background.png"))
+	{
+		std::cout << "ERROR::GAME::INITBACKGROUND::Could not load background texture." << std::endl;
+	}
+	this->background.setTexture(this->backgroundTexture);
+}
+
+void Game::initPoints()
+{
+	this->points = 0;
 }
 
 void Game::initPlayer()
@@ -36,7 +50,7 @@ void Game::initPlayer()
 
 void Game::initAsteroids()
 {
-	this->spawnTimerMax = 50.0f;
+	this->spawnTimerMax = 35.0f;
 	this->spawnTimer = this->spawnTimerMax;
 }
 
@@ -46,6 +60,8 @@ Game::Game()
 	this->initWindow();
 	this->initTextures();
 	this->initGUI();
+	this->initBackground();
+	this->initPoints();
 	this->initPlayer();
 	this->initAsteroids();
 }
@@ -114,13 +130,44 @@ void Game::updateInput()
 
 void Game::updateGUI()
 {
+	std::stringstream ss;
+	ss << "Points: " << this->points;
+	this->pointText.setString(ss.str());
+}
 
+void Game::updateBackground()
+{
+
+}
+
+void Game::updateCollision()
+{
+	// Left world collision
+	if (this->player->getBounds().left < 0.0f)
+	{
+		this->player->setPosition(0.0f, this->player->getBounds().top);
+	}
+	// Right world collision
+	else if (this->player->getBounds().left + this->player->getBounds().width >= this->window->getSize().x)
+	{
+		this->player->setPosition(this->window->getSize().x - this->player->getBounds().width, this->player->getBounds().top);
+	}
+
+	// Top world collision
+	if (this->player->getBounds().top < 0.0f)
+	{
+		this->player->setPosition(this->player->getBounds().left, 0.0f);
+	}
+	// Bottom world collision
+	else if (this->player->getBounds().top + this->player->getBounds().height >= this->window->getSize().y)
+	{
+		this->player->setPosition(this->player->getBounds().left, this->window->getSize().y - this->player->getBounds().height);
+	}
 }
 
 void Game::updateBullets()
 {
 	unsigned counter = 0;
-
 	for (auto* bullet : this->bullets)
 	{
 		bullet->update();
@@ -139,13 +186,39 @@ void Game::updateBullets()
 
 void Game::updateAsteroids()
 {
+	// Spawning asteroids
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->asteroids.push_back(new Asteroid(rand() % this->window->getSize().x - 20.0f, -10.0f));
+		this->asteroids.push_back(new Asteroid(rand() % this->window->getSize().x, -10.0f));
 		this->spawnTimer = 0.0f;
 	}
-		
+
+	unsigned counter = 0;
+	for (auto* asteroid : this->asteroids)
+	{
+		asteroid->update();
+
+		// Asteroid remove off-screen (bottom of screen)
+		if (asteroid->getBounds().top > this->window->getSize().y)
+		{
+			// Delete asteroid
+			delete this->asteroids.at(counter);
+			this->asteroids.erase(this->asteroids.begin() + counter);
+			--counter;
+		}
+		else if (asteroid->getBounds().intersects(this->player->getBounds()))
+		{
+			delete this->asteroids.at(counter);
+			this->asteroids.erase(this->asteroids.begin() + counter);
+			--counter;
+		}
+		++counter;
+	}
+}
+
+void Game::updateCombat()
+{
 	for (unsigned int i = 0; i < this->asteroids.size(); ++i)
 	{
 		bool enemyRemoved = false;
@@ -155,22 +228,17 @@ void Game::updateAsteroids()
 		{
 			if (this->asteroids[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
-				this->bullets.erase(this->bullets.begin() + k);
-				this->asteroids.erase(this->asteroids.begin() + i);
-				enemyRemoved = true;
-			}
-		}
+				this->points += this->asteroids[i]->getPoints();
 
-		if (!enemyRemoved)
-		{
-			// Remove asteroids at the bottom of the screen
-			if (this->asteroids[i]->getBounds().top > this->window->getSize().y)
-			{
+				delete this->bullets[k];
+				this->bullets.erase(this->bullets.begin() + k);
+
+				delete this->asteroids[i];
 				this->asteroids.erase(this->asteroids.begin() + i);
 				enemyRemoved = true;
+
 			}
 		}
-		
 	}
 }
 
@@ -180,9 +248,12 @@ void Game::update()
 	this->updatePollEvents();
 	this->updateInput();
 	this->player->update();
+	this->updateCollision();
 	this->updateBullets();
 	this->updateAsteroids();
+	this->updateCombat();
 	this->updateGUI();
+	this->updateBackground();
 }
 
 void Game::renderGUI()
@@ -190,11 +261,19 @@ void Game::renderGUI()
 	this->window->draw(this->pointText);
 }
 
+void Game::renderBackground()
+{
+	this->window->draw(this->background);
+}
+
 void Game::render()
 {
 	this->window->clear();
 
-	// Draw all the pixels
+	// Draw background
+	this->renderBackground();
+
+	// Draw the player, bullets, and asteroids
 	this->player->render(*this->window);
 
 	for (auto* bullet : this->bullets)
@@ -207,6 +286,7 @@ void Game::render()
 		asteroid->render(this->window);
 	}
 
+	// Draw GUI
 	this->renderGUI();
 
 	this->window->display();

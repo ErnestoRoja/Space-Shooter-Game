@@ -1,4 +1,6 @@
 #pragma once
+#include<string>
+#include<sstream>
 #include"Player.h"
 #include"Asteroids.h"
 
@@ -18,6 +20,13 @@ private:
 	sf::Font font;
 	sf::Text pointText;
 
+	// Background
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
+
+	// Point system
+	unsigned int points;
+
 	// Player
 	Player* player;
 
@@ -30,6 +39,8 @@ private:
 	void initWindow();
 	void initTextures();
 	void initGUI();
+	void initBackground();
+	void initPoints();
 	void initPlayer();
 	void initAsteroids();
 
@@ -43,10 +54,14 @@ public:
 	void updatePollEvents();
 	void updateInput();
 	void updateGUI();
+	void updateBackground();
+	void updateCollision();
 	void updateBullets();
 	void updateAsteroids();
+	void updateCombat();
 	void update();
 	void renderGUI();
+	void renderBackground();
 	void render();
 };
 
