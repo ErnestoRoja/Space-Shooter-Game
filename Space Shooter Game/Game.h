@@ -19,6 +19,7 @@ private:
 	// GUI
 	sf::Font font;
 	sf::Text pointText;
+	sf::Text gameOverText;
 
 	// Background
 	sf::Texture backgroundTexture;
@@ -29,6 +30,10 @@ private:
 
 	// Player
 	Player* player;
+
+	// Player GUI
+	sf::RectangleShape playerHpBar;
+	sf::RectangleShape playerHpBarBackground;
 
 	// Enemies
 	float spawnTimer;

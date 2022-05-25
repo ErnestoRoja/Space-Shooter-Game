@@ -42,6 +42,11 @@ const int& Asteroid::getPoints() const
 	return this->points;
 }
 
+const int& Asteroid::getDamage() const
+{
+	return this->damage;
+}
+
 // Public functions
 void Asteroid::update()
 {

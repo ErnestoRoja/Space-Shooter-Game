@@ -26,8 +26,22 @@ void Game::initGUI()
 	this->pointText.setFont(this->font);
 	this->pointText.setCharacterSize(36);
 	this->pointText.setFillColor(sf::Color::White);
-	this->pointText.setString("test");
-}
+
+	// Init player GUI
+	this->playerHpBar.setSize(sf::Vector2f(300.0f, 25.0f));
+	this->playerHpBar.setFillColor(sf::Color::Red);
+	this->playerHpBar.setPosition(sf::Vector2f(0.0f, 50.0f));
+
+	this->playerHpBarBackground = this->playerHpBar;
+	this->playerHpBarBackground.setFillColor(sf::Color(25, 25, 25, 200));
+
+	// Init game over text
+	this->gameOverText.setFont(this->font);
+	this->gameOverText.setCharacterSize(60);
+	this->gameOverText.setFillColor(sf::Color::Red);
+	this->gameOverText.setString("Game Over! Try again.");
+	this->gameOverText.setPosition(this->window->getSize().x / 2.0f - this->gameOverText.getGlobalBounds().width / 2.0f, this->window->getSize().y / 2.0f - this->gameOverText.getGlobalBounds().height / 2.0f);
+}	
 
 void Game::initBackground()
 {
@@ -95,7 +109,11 @@ void Game::run()
 {
 	while (this->window->isOpen())
 	{
-		this->update();
+		this->updatePollEvents();
+
+		if (this->player->getHp() > 0)
+			this->update();
+		
 		this->render();
 	}
 }
@@ -133,6 +151,10 @@ void Game::updateGUI()
 	std::stringstream ss;
 	ss << "Points: " << this->points;
 	this->pointText.setString(ss.str());
+
+	// Update player hp bar
+	float hpPercent = static_cast<float>(this->player->getHp()) / this->player->getHpMax();
+	this->playerHpBar.setSize(sf::Vector2f(300.0f * hpPercent, this->playerHpBar.getSize().y));
 }
 
 void Game::updateBackground()
@@ -178,7 +200,6 @@ void Game::updateBullets()
 			// Delete bullet 
 			delete this->bullets.at(counter);
 			this->bullets.erase(this->bullets.begin() + counter);
-			--counter;
 		}
 		++counter;
 	}
@@ -205,13 +226,13 @@ void Game::updateAsteroids()
 			// Delete asteroid
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
-			--counter;
 		}
+		// Remove asteroid when colliding with player
 		else if (asteroid->getBounds().intersects(this->player->getBounds()))
 		{
+			this->player->loseHp(this->asteroids.at(counter)->getDamage());
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
-			--counter;
 		}
 		++counter;
 	}
@@ -245,7 +266,6 @@ void Game::updateCombat()
 // Frame handling
 void Game::update()
 {
-	this->updatePollEvents();
 	this->updateInput();
 	this->player->update();
 	this->updateCollision();
@@ -259,6 +279,8 @@ void Game::update()
 void Game::renderGUI()
 {
 	this->window->draw(this->pointText);
+	this->window->draw(this->playerHpBarBackground);
+	this->window->draw(this->playerHpBar);
 }
 
 void Game::renderBackground()
@@ -288,6 +310,10 @@ void Game::render()
 
 	// Draw GUI
 	this->renderGUI();
+
+	// Draw game over screen
+	if (this->player->getHp() <= 0)
+		this->window->draw(this->gameOverText);
 
 	this->window->display();
 }
