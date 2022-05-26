@@ -8,7 +8,7 @@ void Asteroid::initVariables()
 	this->speed = static_cast<float>(this->pointReward);
 	this->hpMax = static_cast<int>(this->pointReward);
 	this->hp = this->hpMax;
-	this->damage = this->pointReward;
+	this->damage = (50 / this->pointReward);
 	this->points = this->pointReward;
 }
 

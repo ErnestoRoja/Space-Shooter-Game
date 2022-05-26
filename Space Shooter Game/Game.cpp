@@ -140,6 +140,7 @@ void Game::updateInput()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		this->player->move(0.0f, 1.0f);
 
+	// Create new bullet when spacebar is pressed
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->player->canAttacK())
 	{
 		this->bullets.push_back(new Gun(this->textures["Bullet"], (this->player->getPos().x + this->player->getBounds().width / 2.0f) - 20.0f, this->player->getPos().y, 0.0f, -5.0f, 5.0f));
@@ -226,13 +227,17 @@ void Game::updateAsteroids()
 			// Delete asteroid
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
+			// Decrease player hp
+			this->player->loseHp(this->asteroids.at(counter)->getDamage());
 		}
 		// Remove asteroid when colliding with player
 		else if (asteroid->getBounds().intersects(this->player->getBounds()))
 		{
-			this->player->loseHp(this->asteroids.at(counter)->getDamage());
+			// Delete asteroid
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
+			// Decrease player hp
+			this->player->loseHp(this->asteroids.at(counter)->getDamage());
 		}
 		++counter;
 	}
