@@ -7,7 +7,7 @@
 ### This game only has one state
 
 - Game Play State: where the player plays the game
-/* Future games will include additional states: main menu, paused, amd game over. */
+- /* Future games will include additional states: main menu, paused, amd game over. */
 
 ### Features
 
