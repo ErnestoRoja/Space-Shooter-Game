@@ -13,7 +13,7 @@
 
 - Ship can be controlled with WASD keys, respectively.
 - Ship fires bullets when Spacebar is pressed.
-- Asteroids randomly spawn above the screen and move downwards.
+- Asteroids of varying sizes and speed randomly spawn above the screen and move downwards.
 - Smaller asteroids move quicker, award more points when destroyed, and deal small damage upon colliding with the player.
 - Larger asteroids move slower, award less points when destroyed, but deal more damage to players upon collision.
 - Points are awarded when the player shoots an asteroid.
