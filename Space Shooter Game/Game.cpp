@@ -225,11 +225,12 @@ void Game::updateAsteroids()
 		// Asteroid remove off-screen (bottom of screen)
 		if (asteroid->getBounds().top > this->window->getSize().y)
 		{
+			// Decrease player hp
+			this->player->loseHp(this->asteroids.at(counter)->getDamage());
 			// Delete asteroid
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
-			// Decrease player hp
-			this->player->loseHp(this->asteroids.at(counter)->getDamage());
+			
 		}
 		// Remove asteroid when colliding with player
 		else if (asteroid->getBounds().intersects(this->player->getBounds()))
