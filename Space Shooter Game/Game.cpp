@@ -39,9 +39,9 @@ void Game::initGUI()
 	this->gameOverText.setFont(this->font);
 	this->gameOverText.setCharacterSize(60);
 	this->gameOverText.setFillColor(sf::Color::Red);
-	this->gameOverText.setString("Game Over! Try again.");
+	this->gameOverText.setString("Game Over!");
 	this->gameOverText.setPosition(this->window->getSize().x / 2.0f - this->gameOverText.getGlobalBounds().width / 2.0f, this->window->getSize().y / 2.0f - this->gameOverText.getGlobalBounds().height / 2.0f);
-}	
+}
 
 void Game::initBackground()
 {
@@ -87,7 +87,7 @@ Game::~Game()
 	delete this->player;
 
 	// Delete all textures
-	for (auto& i : this->textures) 
+	for (auto& i : this->textures)
 	{
 		delete i.second;
 	}
@@ -105,6 +105,7 @@ Game::~Game()
 	}
 }
 
+// Public functions
 void Game::run()
 {
 	while (this->window->isOpen())
@@ -113,7 +114,7 @@ void Game::run()
 
 		if (this->player->getHp() > 0)
 			this->update();
-		
+
 		this->render();
 	}
 }
@@ -233,11 +234,12 @@ void Game::updateAsteroids()
 		// Remove asteroid when colliding with player
 		else if (asteroid->getBounds().intersects(this->player->getBounds()))
 		{
+			// Decrease player hp
+			this->player->loseHp(this->asteroids.at(counter)->getDamage());
 			// Delete asteroid
 			delete this->asteroids.at(counter);
 			this->asteroids.erase(this->asteroids.begin() + counter);
-			// Decrease player hp
-			this->player->loseHp(this->asteroids.at(counter)->getDamage());
+			
 		}
 		++counter;
 	}
@@ -268,7 +270,6 @@ void Game::updateCombat()
 	}
 }
 
-// Frame handling
 void Game::update()
 {
 	this->updateInput();
@@ -322,4 +323,3 @@ void Game::render()
 
 	this->window->display();
 }
-

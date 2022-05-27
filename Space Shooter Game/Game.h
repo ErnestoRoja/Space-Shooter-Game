@@ -53,7 +53,7 @@ public:
 	Game();
 	virtual ~Game();
 
-	// Functions
+	// Public functions
 	void run();
 
 	void updatePollEvents();
@@ -65,9 +65,8 @@ public:
 	void updateAsteroids();
 	void updateCombat();
 	void update();
+
 	void renderGUI();
 	void renderBackground();
 	void render();
 };
-
-

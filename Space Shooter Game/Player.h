@@ -44,4 +44,3 @@ public:
 	void update();
 	void render(sf::RenderTarget& target);
 };
-
