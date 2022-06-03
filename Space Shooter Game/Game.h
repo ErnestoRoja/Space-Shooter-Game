@@ -59,7 +59,6 @@ public:
 	void updatePollEvents();
 	void updateInput();
 	void updateGUI();
-	void updateBackground();
 	void updateCollision();
 	void updateBullets();
 	void updateAsteroids();

@@ -159,11 +159,6 @@ void Game::updateGUI()
 	this->playerHpBar.setSize(sf::Vector2f(300.0f * hpPercent, this->playerHpBar.getSize().y));
 }
 
-void Game::updateBackground()
-{
-
-}
-
 void Game::updateCollision()
 {
 	// Left world collision
