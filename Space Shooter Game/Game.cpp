@@ -40,7 +40,8 @@ void Game::initGUI()
 	this->gameOverText.setCharacterSize(60);
 	this->gameOverText.setFillColor(sf::Color::Red);
 	this->gameOverText.setString("Game Over!");
-	this->gameOverText.setPosition(this->window->getSize().x / 2.0f - this->gameOverText.getGlobalBounds().width / 2.0f, this->window->getSize().y / 2.0f - this->gameOverText.getGlobalBounds().height / 2.0f);
+	this->gameOverText.setPosition(this->window->getSize().x / 2.0f - this->gameOverText.getGlobalBounds().width / 2.0f, 
+								   this->window->getSize().y / 2.0f - this->gameOverText.getGlobalBounds().height / 2.0f);
 }
 
 void Game::initBackground()
@@ -144,7 +145,8 @@ void Game::updateInput()
 	// Create new bullet when spacebar is pressed
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && this->player->canAttacK())
 	{
-		this->bullets.push_back(new Gun(this->textures["Bullet"], (this->player->getPos().x + this->player->getBounds().width / 2.0f) - 20.0f, this->player->getPos().y, 0.0f, -5.0f, 5.0f));
+		this->bullets.push_back(new Gun(this->textures["Bullet"], (this->player->getPos().x + this->player->getBounds().width / 2.0f) - 20.0f, 
+			                            this->player->getPos().y, 0.0f, -5.0f, 5.0f));
 	}
 }
 
