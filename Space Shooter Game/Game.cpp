@@ -275,7 +275,6 @@ void Game::update()
 	this->updateAsteroids();
 	this->updateCombat();
 	this->updateGUI();
-	this->updateBackground();
 }
 
 void Game::renderGUI()
